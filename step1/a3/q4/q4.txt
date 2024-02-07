@@ -1,0 +1,11 @@
+- Point: linked list x -> y -> z -> Nullptr
+- Sphere: linked list [point: the center] -> [int: radius] -> Nullptr
+
+- Sphere buildSphere(int x, int y, int z, int r)
+- bool isValid(Sphere s)
+- bool isCollide(Sphere s1, Sphere s2)
+
+Data -> Node
+
+- bool isInSphere(Point p, Sphere s)
+- float getDistance(Point p1, Point p2)
