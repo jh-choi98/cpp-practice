@@ -22,6 +22,8 @@ public:
     DoubleLinkedList() : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
     ~DoubleLinkedList() { delete head; }
 
+    int getLength() { return len; }
+
     void addFront(int data) {
         Node* newNode = new Node{ data, nullptr, head };
         if (!len && !head && !tail) {
@@ -47,7 +49,31 @@ public:
         }
         ++len;
     }
-    void addByIndex(int data, int index) {}
+    void addByIndex(int data, int index) {
+        Node* cur = head;
+        if (index == 0) {
+            addFront(data);
+            return;
+        }
+
+        if (index == len - 1) {
+            addBack(data);
+            return;
+        }
+
+        Node* newNode = new Node{ data };
+
+        for (int i = 0; i < index; ++i) {
+            cur = cur->next;
+        }
+        newNode->prev = cur->prev;
+        newNode->next = cur;
+        cur->prev->next = newNode;
+        cur->prev = newNode;
+
+        ++len;
+
+    }
     void print() {
         cout << "[ ";
         Node* cur = head;
@@ -82,7 +108,12 @@ int main() {
     l2.addBack(1);
     l2.print();
 
-
+    l1.addByIndex(1, 0);
+    l1.addByIndex(10000, l1.getLength() - 1);
+    l1.addByIndex(6, 5);
+    l1.addByIndex(7, 6);
+    l1.addByIndex(8, 7);
+    l1.print();
 }
 
 /* 해당 구조가 효율적인지 아닌지 판단하는 방법
