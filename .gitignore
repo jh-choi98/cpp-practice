@@ -2,3 +2,5 @@
 *.d
 Makefile
 *.crt
+*.json
+.gitignore
