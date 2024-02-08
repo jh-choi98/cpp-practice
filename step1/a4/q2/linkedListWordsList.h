@@ -4,28 +4,28 @@
 #include "abstractWordsList.h"
 
 struct Node {
-    std::string data;
-    Node *next;
+  std::string data;
+  Node* next;
 
-  public:
-    Node(std::string data);
-    Node(std::string data, Node *node);
+public:
+  Node(std::string data);
+  Node(std::string data, Node* node);
 };
 
 class LinkedListWordsList : public AbstractWordsList {
-    Node *head;
-    Node *tail;
+  Node* head;
+  Node* tail;
 
-  public:
-    LinkedListWordsList();
-    ~LinkedListWordsList();
+public:
+  LinkedListWordsList();
+  ~LinkedListWordsList();
 
-    void addWord(std::string str) override;
-    void updateWord(std::string oldStr, std::string newStr) override;
-    bool isSorted() override;                    // application 담당
-    void removeDuplicatesExceptFirst() override; // application 담당
-    void removeDuplicatesExceptLast() override;  // application 담당
-    void print() override;
+  void addWord(std::string str) override;
+  void updateWord(std::string oldStr, std::string newStr) override;
+  bool isSorted() override;                    // application 담당
+  void removeDuplicatesExceptFirst() override; // application 담당
+  void removeDuplicatesExceptLast() override;  // application 담당
+  void print() override;
 };
 
 #endif
@@ -44,12 +44,10 @@ DataStructure를 디자인할 때는 어디서든지 사용할 수 있도록 만
 특정한 기능을 수행하는 클래스들을 만들 때도 마찬가지이다.
 특정 프로젝트를 넘어서 언제어디서든지 사용할 수 있도록 만들어야 한다.
 
-
 DataStructure는 레고 조각
 Application은 레고 조각을 사용해서 작품을 만듦
-이 때 래고 조각은 다른 작품을 위해서도 사용될 수 있음. 따라서 범용적임.
+이 때 레고 조각은 다른 작품을 위해서도 사용될 수 있음. 따라서 범용적임.
 DataStructure를 디자인할 때도 이처럼 해야함.
-
 
 LinkedListWordsList의 Node를 template로 만들기
 */

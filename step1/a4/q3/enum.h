@@ -1,0 +1,3 @@
+enum class Card {
+    Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace, Two, Black, Red
+};
