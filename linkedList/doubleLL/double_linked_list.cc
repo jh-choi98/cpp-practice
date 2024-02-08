@@ -24,6 +24,7 @@ public:
 
     int getLength() { return len; }
 
+    // ************************************************************ Add
     void addFront(int data) {
         Node* newNode = new Node{ data, nullptr, head };
         if (!len && !head && !tail) {
@@ -74,6 +75,31 @@ public:
         ++len;
 
     }
+
+    // ************************************************************ Update
+    void update(int data, int index) {
+        if (!len && !head && !tail) {
+            cerr << "The list is empty" << endl;
+            return;
+        }
+
+        if (index >= len) {
+            cerr << "Invalid Index" << endl;
+            return;
+        }
+
+        if (index == len - 1) {
+            tail->data = data;
+            return;
+        }
+
+        Node* cur = head;
+        for (int i = 0; i < index; ++i) {
+            cur = cur->next;
+        }
+        cur->data = data;
+    }
+
     void print() {
         cout << "[ ";
         Node* cur = head;
@@ -114,6 +140,12 @@ int main() {
     l1.addByIndex(7, 6);
     l1.addByIndex(8, 7);
     l1.print();
+
+    l1.update(0, 0);
+    l1.update(5, l1.getLength() - 1);
+    l1.update(500, 3);
+    l1.print();
+
 }
 
 /* 해당 구조가 효율적인지 아닌지 판단하는 방법
