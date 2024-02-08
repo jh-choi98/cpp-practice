@@ -32,8 +32,19 @@ int main() {
         list3->addWord(str3[i]);
     }
 
-    list4->addWord("a");
-    list4->addWord("a");
+    // list4->addWord("2");
+    // list4->addWord("1");
+    // list4->addWord("1");
+    // list4->addWord("2");
+    // list4->addWord("2");
+    // list4->addWord("1");
+    // list4->addWord("1");
+    list4->addWord("1");
+    list4->addWord("1");
+    list4->addWord("1");
+    list4->addWord("1");
+    list4->addWord("1");
+    list4->addWord("1");
 
     cout << "********** CountVowels **********" << endl;
     cout << wp.countVowels("the qUick brOwn fox jumped Over the lAzy dog")
@@ -59,6 +70,6 @@ int main() {
     cout << "********** removeDuplicatesExceptLast **********" << endl;
     list4->print();
     wp.removeDuplicatesExceptLast(list4)->print();
-    list3->print();
-    wp.removeDuplicatesExceptLast(list3)->print();
+    // list3->print();
+    // wp.removeDuplicatesExceptLast(list3)->print();
 }

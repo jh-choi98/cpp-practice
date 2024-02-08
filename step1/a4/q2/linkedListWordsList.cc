@@ -102,9 +102,13 @@ void LinkedListWordsList::removeDuplicatesExceptLast() {
     while (cur) {
         if (hash.count(cur->data)) {
             Node *target = hash[cur->data];
-            // cout << target->data << endl;
             Node *targetPrev = targetPair[target];
-            if (!targetPrev) {
+
+            if (target == prev) {
+                prev = targetPrev;
+            }
+
+            if (target == head) {
                 Node *temp = head;
                 head = head->next;
                 temp->next = nullptr;
@@ -115,8 +119,9 @@ void LinkedListWordsList::removeDuplicatesExceptLast() {
                 delete target;
             }
         }
+
+        targetPair[cur] = prev;
         hash[cur->data] = cur;
-        targetPair[cur, prev];
         prev = cur;
         cur = cur->next;
     }
