@@ -72,27 +72,6 @@ void LinkedListWordsList::removeDuplicatesExceptFirst() {
 }
 
 void LinkedListWordsList::removeDuplicatesExceptLast() {
-    // Node *cur = head;
-    // Node *curInner = nullptr;
-    // Node *prev = nullptr;
-
-    // while (cur && cur->next) {
-    //     curInner = cur->next;
-    //     while (curInner) {
-    //         if (cur->data == curInner->data) {
-    //             prev->next = cur->next;
-    //             delete cur;
-    //             cur = nullptr;
-    //             break;
-    //         } else {
-    //             curInner = curInner->next;
-    //         }
-    //     }
-    //     if (cur) {
-    //         prev = cur;
-    //     }
-    //     cur = prev->next;
-    // }
     unordered_map<Node *, Node *> targetPair;
     unordered_map<string, Node *> hash;
 
@@ -100,28 +79,43 @@ void LinkedListWordsList::removeDuplicatesExceptLast() {
     Node *prev = nullptr;
 
     while (cur) {
+        cout << "cur->data: " << cur->data << endl;
         if (hash.count(cur->data)) {
             Node *target = hash[cur->data];
             Node *targetPrev = targetPair[target];
 
-            if (target == prev) {
-                prev = targetPrev;
+            // if (target == prev) {
+            //     prev = targetPrev;
+            // }
+
+            // if (target == head) {
+            //     Node *temp = head;
+            //     head = head->next;
+            //     temp->next = nullptr;
+            //     delete temp;
+            // } else {
+            //     targetPrev->next = target->next;
+            //     target->next = nullptr;
+            //     delete target;
+            // }
+
+            if (targetPrev) {
+                targetPrev->next = target->next;
+            } else {
+                head = target->next;
             }
 
-            if (target == head) {
-                Node *temp = head;
-                head = head->next;
-                temp->next = nullptr;
-                delete temp;
-            } else {
-                targetPrev->next = target->next;
-                target->next = nullptr;
-                delete target;
+            target->next = nullptr;
+            delete target;
+
+            if (prev == target) {
+                prev = targetPrev;
             }
         }
 
-        targetPair[cur] = prev;
         hash[cur->data] = cur;
+        targetPair[cur] = prev;
+
         prev = cur;
         cur = cur->next;
     }

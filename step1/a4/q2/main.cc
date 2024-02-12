@@ -68,8 +68,9 @@ int main() {
     // wp.removeDuplicatesExceptFirst(list4)->print();
 
     cout << "********** removeDuplicatesExceptLast **********" << endl;
-    list4->print();
-    wp.removeDuplicatesExceptLast(list4)->print();
+    list3->print();
+    wp.removeDuplicatesExceptLast(list3)->print();
+
     // list3->print();
     // wp.removeDuplicatesExceptLast(list3)->print();
 }

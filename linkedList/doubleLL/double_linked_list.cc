@@ -1,37 +1,37 @@
 #include <iostream>
 using namespace std;
 
-
 struct Node {
     int data;
-    Node* prev;
-    Node* next;
+    Node *prev;
+    Node *next;
 
-    Node(int data) : data{ data }, prev{ nullptr }, next{ nullptr } {}
-    Node(int data, Node* prev, Node* next)
-        : data{ data }, prev{ prev }, next{ next } {}
+    Node(int data) : data{data}, prev{nullptr}, next{nullptr} {}
+    Node(int data, Node *prev, Node *next)
+        : data{data}, prev{prev}, next{next} {}
     ~Node() { delete next; }
 };
 
 class DoubleLinkedList {
-    Node* head;
-    Node* tail;
+    Node *head;
+    Node *tail;
     int len;
 
-public:
-    DoubleLinkedList() : head{ nullptr }, tail{ nullptr }, len{ 0 } {}
+  public:
+    DoubleLinkedList() : head{nullptr}, tail{nullptr}, len{0} {}
     ~DoubleLinkedList() { delete head; }
 
     int getLength() { return len; }
 
     // ************************************************************ Add
+    // *****************************************************************
+    // Ctor에서 가능한지 시도해보기 **********************
     void addFront(int data) {
-        Node* newNode = new Node{ data, nullptr, head };
+        Node *newNode = new Node{data, nullptr, head};
         if (!len && !head && !tail) {
             head = newNode;
             tail = head;
-        }
-        else {
+        } else {
             head->prev = newNode;
             newNode->next = head;
             head = newNode;
@@ -39,11 +39,10 @@ public:
         ++len;
     }
     void addBack(int data) {
-        Node* newNode = new Node{ data, tail, nullptr };
+        Node *newNode = new Node{data, tail, nullptr};
         if (!len && !head && !tail) {
             addFront(data);
-        }
-        else {
+        } else {
             newNode->prev = tail;
             tail->next = newNode;
             tail = newNode;
@@ -51,7 +50,7 @@ public:
         ++len;
     }
     void addByIndex(int data, int index) {
-        Node* cur = head;
+        Node *cur = head;
         if (index == 0) {
             addFront(data);
             return;
@@ -62,7 +61,7 @@ public:
             return;
         }
 
-        Node* newNode = new Node{ data };
+        Node *newNode = new Node{data};
 
         for (int i = 0; i < index; ++i) {
             cur = cur->next;
@@ -73,7 +72,6 @@ public:
         cur->prev = newNode;
 
         ++len;
-
     }
 
     // ************************************************************ Update
@@ -93,7 +91,7 @@ public:
             return;
         }
 
-        Node* cur = head;
+        Node *cur = head;
         for (int i = 0; i < index; ++i) {
             cur = cur->next;
         }
@@ -102,7 +100,7 @@ public:
 
     void print() {
         cout << "[ ";
-        Node* cur = head;
+        Node *cur = head;
         while (cur) {
             cout << cur->data;
             if (cur->next) {
@@ -112,9 +110,94 @@ public:
         }
         cout << " ]" << endl;
     }
+
+    // ************************************************************ Remove
+    /*
+    1. Linked list에 대한 설명 - audience의 수준에 따라 판단
+        Linked List is the chain of pointers
+    2. 내 코드 design에 대해서 설명
+        - Design의 핵심 아이디어
+            - Data structure의 디자인
+            struct Node {
+                int val;
+                // For the simplicity, I'll just assume the data type stored in
+    a node is integer;
+                 Node *prev;
+                 Node *next;
+
+                ~Node{ delete next;}
+            }
+
+            // I'll define a wrapper class to avoid the use of double pointer
+            class LinkedList {
+                Node *head;
+                Node *tail;
+                int len;
+            public:
+                LinkedList(): head{nullptr}, tail{nullptr} {}
+
+                void removeByIndex(int index) {
+                    // edge cases
+
+
+                    // remove first node
+
+                    // remove last node
+
+                    // remove any node in the middle
+                }
+            };
+
+
+    */
+    void removeByIndex(int index) {
+        // edge cases
+        if (index < 0) {
+            cerr << "Invalid index: less than 0" << endl;
+            return;
+        }
+
+        if (!head && !tail) {
+            cerr << "The list is empty" << endl;
+            return;
+        }
+
+        if (index >= len) {
+            cerr << "Invalid index: larger than the length of the entire list"
+                 << endl;
+            return;
+        }
+
+        // remove first node
+        if (index == 0) {
+            Node *temp = head;
+            head = head->next;
+            head->prev = nullptr;
+            temp->next = nullptr;
+            delete temp;
+            return;
+        }
+
+        // remove last node
+        if (index == len - 1) {
+            Node *temp = tail;
+            tail = tail->prev;
+            tail->next = nullptr;
+            delete temp;
+            return;
+        }
+
+        // remove any node in the middle
+        Node *cur = head;
+        for (int i = 0; i < index; ++i) {
+            cur = cur->next;
+        }
+        cur->prev->next = cur->next;
+        cur->next->prev = cur->prev;
+        cur->next = nullptr;
+        delete cur;
+    }
 };
-
-
 
 int main() {
     DoubleLinkedList l1;
@@ -145,7 +228,6 @@ int main() {
     l1.update(5, l1.getLength() - 1);
     l1.update(500, 3);
     l1.print();
-
 }
 
 /* 해당 구조가 효율적인지 아닌지 판단하는 방법
@@ -153,3 +235,39 @@ int main() {
 ex. addBack()을 tail이 있을 때의 time complexity와 없을 때의
 time complexity를 비교해서 판단
  */
+
+// ListNode *reverseList(ListNode *head) {
+//     // Base case: if the current head is nullptr, return nullptr
+//     if (!head) {
+//         return nullptr;
+//     }
+
+//     // Initialize newHead to the current head
+//     ListNode *newHead = head;
+
+//     // If the current head has a next node,
+//     // make a recursive call to reverse the rest of the list
+//     if (head->next) {
+
+//         // 이 단계를 통해 newHead는 마지막 노드를 가리키게 된다.
+//         newHead = reverseList(head->next);
+
+//         // After the recursive call returns,
+//         // update the next pointer of the next node to point to the
+//         current head
+//         // 현재 노드의 다음 노드의 next 포인터를 현재 노드(head)로
+//         업데이트하여
+//         // 역순 링크를 만든다.
+//         head->next->next = head; // 내 다음 노드의 다음이 나다.
+//     }
+//     // Break the original link by setting the next pointer of the current
+//     head
+//     // to nullptr 원래 연결을 끊고 새로운 리스트의 끝을 나타낸다. 이
+//     작업은
+//     // 역순으로 재배치된 리스트에서 현재 노드가 마지막 노드가 되도록
+//     한다. head->next = nullptr;
+
+//     return newHead;
+// }
+
+// // recursion : 뒤에서부터 eval 시작
