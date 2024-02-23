@@ -114,9 +114,34 @@ class BST {
             }
         }
     }
+    // *********************************************************
+    // void remove(int data) {
+    //     BSTNode *subRoot = root;
+    //     BSTNode *prev = nullptr;
 
-    void remove(int data) {}
-    void print() {}
+    //     while (subRoot) {
+    //         if (data < subRoot->data) {
+    //             if (subRoot->left) {
+    //                 prev = subRoot;
+    //                 subRoot = subRoot->left;
+    //             } else {
+    //                 cout << "This value does not exist in the tree" << endl;
+    //                 return;
+    //             }
+    //         } else if (subRoot->data < data) {
+    //             if (subRoot->right) {
+    //                 prev = subRoot;
+    //                 subRoot = subRoot->right;
+    //             } else {
+    //                 cout << "This value does not exist in the tree" << endl;
+    //                 return;
+    //             }
+    //         } else {
+
+    //         }
+    //     }
+    // }
+    //     void print() {}
 };
 
 /*
