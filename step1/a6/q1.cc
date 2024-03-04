@@ -61,7 +61,7 @@ class LLIntListProcessor : public IntListProcessor {
                  << endl;
             return;
         }
-        }
+    }
     AbstractIntList *zip(AbstractIntList *l1, AbstractIntList *l2) {}
     AbstractIntList *buildXorIntList(AbstractIntList *l1, AbstractIntList *l2) {
     }

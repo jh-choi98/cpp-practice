@@ -4,5 +4,4 @@ Makefile
 *.crt
 *.json
 *.exe
-practice.cc
 *.txt
