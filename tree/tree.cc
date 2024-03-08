@@ -5,12 +5,15 @@ struct BSTNode {
     int data;
     BSTNode *left;
     BSTNode *right;
-    int depth;
+    int depth, height;
 
     BSTNode(int data) : data{data}, left{nullptr}, right{nullptr}, depth{0} {}
     BSTNode(int data, BSTNode *l, BSTNode *r)
         : data{data}, left{l}, right{r}, depth{0} {} // Intermediate Node
 
+    BSTNode(int data, int depth, int height)
+        : data{data}, left{nullptr}, right{nullptr}, depth{depth},
+          height{height} {}
     BSTNode(int data, int depth)
         : data{data}, left{nullptr}, right{nullptr}, depth{depth} {}
     BSTNode(int data, BSTNode *l, BSTNode *r, int depth)
@@ -31,15 +34,34 @@ class BST {
     BST(BSTNode *root) : root{root}, height{0} {}
     ~BST() { delete root; }
 
-    int calcDepth() { return calcDepthHelp(root, 0); }
+    // int calcDepth() { return calcDepthHelp(root, 0); }
 
-    int calcDepthHelp(BSTNode *r, int a) {
+    // int calcDepthHelp(BSTNode *r, int a) {
+    //     if (!r) {
+    //         return a;
+    //     } else {
+    //         return calcDepthHelp(r->left, a + 1);
+    //     }
+    //     // Call stack이 안 쌓여서 stack overflow를 방지
+    //     // tail recursion
+    // }
+
+    int calcDepth(BSTNode *target) { return calcDepthHelp(root, target, 0); }
+
+    int calcDepthHelp(BSTNode *r, BSTNode *target, int depth) {
         if (!r) {
-            return a;
-        } else {
-            return calcDepthHelp(r->left, a + 1);
+            cerr << "The target Node does not exist" << endl;
+            return -1;
         }
-        // Call stack이 안 쌓여서 stack overflow를 방지
+
+        if (r == target) {
+            return depth;
+        } else if (r->data < target->data) {
+            return calcDepthHelp(r->left, target, depth + 1);
+        } else if (target->data < r->data) {
+            return calcDepthHelp(r->right, target, depth + 1);
+        }
+        // Call stack이 안 쌓여서 stack overflow 방지
         // tail recursion
     }
 
@@ -57,7 +79,8 @@ class BST {
                              4
                         2.          6
                     1.     3.   5.      7
-                                            8
+                                     6.5     8
+                                                9
 
 
 
@@ -288,6 +311,14 @@ class BST {
         }
     }
 
+    void insertDepth2(int data) {
+        if (root) {
+            root = insertRecursionDepth2(data, root);
+        } else {
+            root = new BSTNode(data, );
+        }
+    }
+
     BSTNode *insertRecursionDepth2(int data, BSTNode *r) {
         if (!r) {
             return new BSTNode{data};
@@ -317,37 +348,60 @@ class BST {
         return r;
     }
 
-    void insertDepth2(int data) {
+    // ********************* Depth & Height **********************
+    void insertHeight(int data) {
         if (root) {
-            root = insertRecursionDepth2(data, root);
+            root = insertRecursionHeight(data, root, 0);
+            int leftHeight = root->left ? root->left->height : -1;
+            int rightHeight = root->right ? root->right->height : -1;
+            root->height = max(leftHeight, rightHeight);
         } else {
-            root = new BSTNode(data);
+            root = new BSTNode(data, 0, 0);
         }
     }
 
-    BSTNode *insertRecursionDepth(int data, BSTNode *r, int depth) {
+    BSTNode *insertRecursionHeight(int data, BSTNode *r, int depth) {
         if (!r) {
-            height = max(height, depth);
-            return new BSTNode{data, depth};
+            return new BSTNode{data, depth, 0};
         }
 
         if (data < r->data) {
-            r->left = insertRecursionDepth(data, r->left, depth + 1);
+            r->left = insertRecursionHeight(data, r->left, depth + 1);
+            int rightHeight = r->right ? r->right->height : -1;
+            r->height = max(r->left->height, rightHeight) + 1;
         } else if (r->data < data) {
-            r->right = insertRecursionDepth(data, r->right, depth + 1);
+            r->right = insertRecursionHeight(data, r->right, depth + 1);
+            int leftHeight = r->left ? r->left->height : -1;
+            r->height = max(leftHeight, r->right->height) + 1;
         } else {
             cerr << "[Warning!] Inserting duplicated data" << endl;
         }
         return r;
     }
+    // ********************* Depth & Height **********************
+    // BSTNode *insertRecursionDepth(int data, BSTNode *r, int depth) {
+    //     if (!r) {
+    //         height = max(height, depth);
+    //         return new BSTNode{data, depth};
+    //     }
 
-    void insertDepth(int data) {
-        if (root) {
-            root = insertRecursionDepth(data, root, 0);
-        } else {
-            root = new BSTNode(data);
-        }
-    }
+    //     if (data < r->data) {
+    //         r->left = insertRecursionDepth(data, r->left, depth + 1);
+    //     } else if (r->data < data) {
+    //         r->right = insertRecursionDepth(data, r->right, depth + 1);
+    //     } else {
+    //         cerr << "[Warning!] Inserting duplicated data" << endl;
+    //     }
+    //     return r;
+    // }
+
+    // void insertDepth(int data) {
+    //     if (root) {
+    //         root = insertRecursionDepth(data, root, 0);
+    //     } else {
+    //         root = new BSTNode(data);
+    //     }
+    // }
 
     BST *search(int data) {
         if (root) {
@@ -487,6 +541,51 @@ class BST {
         }
         return getMaxBSTNode(root->right, root);
     }
+
+    void update(int curData, int newData) {
+        BST *target = search(curData);
+        if (!target || !(target->root)) {
+            return;
+        }
+        /*
+        if (curData < newData)
+            if (newData < smallest node among the right subtree)
+                그냥 target node의 값만 바꾸면 됨
+        */
+        if (curData == newData) {
+            return;
+        }
+
+        if (curData < newData) {
+            int minValue =
+                getMaxBSTNode(target->root->right, target->root)->data;
+            if (newData < minValue) {
+                target->root->data = newData;
+                return;
+            }
+        }
+        if (newData < curData) {
+            int maxValue =
+                getMinBSTNode(target->root->right, target->root)->data;
+            if (maxValue < newData) {
+                target->root->data = newData;
+                return;
+            }
+        }
+
+        removeRecursion(curData);
+        insertRecursionHeight(newData);
+    }
+
+    /*
+                             4
+                        2.          6
+                    1.     3.   5.      7
+                                            8
+
+
+
+    */
 };
 
 class Test {
@@ -498,6 +597,21 @@ class Test {
     Test() : bst{new BST} {}
     virtual void insert() = 0;
     virtual ~Test() { delete bst; }
+};
+
+class TestUpdate : public Test {
+  public:
+    void insert() {
+        for (int i = 0; i < 7; i++) {
+            bst->insert(elems[i]);
+        }
+        bst->inorderTraverse();
+    }
+
+    void update(int curData, int newData) {
+        bst->update(curData, newData);
+        bst->inorderTraverse();
+    }
 };
 
 class TestRemoveRecursion : public Test {
@@ -524,14 +638,14 @@ class TestInsert : public Test {
     }
 };
 
-class TestInsertRDepth : public Test {
-    void insert() {
-        for (int i = 0; i < 7; i++) {
-            bst->insertDepth(elems[i]);
-        }
-        bst->inorderTraverse();
-    }
-};
+// class TestInsertRDepth : public Test {
+//     void insert() {
+//         for (int i = 0; i < 7; i++) {
+//             bst->insertDepth(elems[i]);
+//         }
+//         bst->inorderTraverse();
+//     }
+// };
 
 class TestInsertR1 : public Test {
   public:
@@ -599,18 +713,18 @@ void testInsersionLoop() {
     }
 }
 
-void testInsersionRDepth() {
+// void testInsersionRDepth() {
 
-    Test *tests[] = {new TestInsertRDepth};
+//     Test *tests[] = {new TestInsertRDepth};
 
-    for (int i = 0; i < 1; i++) {
-        tests[i]->insert();
-    }
+//     for (int i = 0; i < 1; i++) {
+//         tests[i]->insert();
+//     }
 
-    for (int i = 0; i < 1; i++) {
-        delete tests[i];
-    }
-}
+//     for (int i = 0; i < 1; i++) {
+//         delete tests[i];
+//     }
+// }
 
 void testSearch() {
     TestInsertR1 t;
@@ -625,10 +739,15 @@ void testRemove(int data) {
     t.remove(data);
 }
 
+void testUpdate(int curData, int newData) {
+    TestUpdate t;
+    t.insert();
+    t.update(curData, newData);
+}
+
 int main() {
     // testInsersion1();
-    testRemove(4);
-    testRemove(7);
+    testUpdate(4, 0);
 }
 
 /*
