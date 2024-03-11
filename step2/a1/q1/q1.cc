@@ -10,13 +10,55 @@ class Calculator {
         return sqrt_int_helper(n, result + 1);
     }
 
-    int log_2_helper(int n, int result) {
-        if (expt(2, result) <= n && n < expt(2, result + 1)) {
+    int log_2_helper(int n, int result, int b) {
+        if (b == n) {
             return result;
         }
 
-        return log_2_helper(n, result + 1);
+        if (b < n && n < b * 2) {
+            return result + 1;
+        }
+
+        return log_2_helper(n, result + 1, b * 2);
     }
+
+    // 2^lower <= n < 2^lower+1
+    // int result = 0;
+    // while (lower + 1 < upper) {
+    //     if (mid == n) {
+    //         return result;
+    //     } else if (n < mid) {
+    //         upper /= 2;
+    //         result = upper;
+    //     } else {
+    //         lower *= 2;
+    //         result = lower;
+    //     }
+    // }
+    // return result + 1;
+
+    // Time complexity: O(logn)
+    int log_2_helper2(int n, int lower, int upper, int mid, int result) {
+        if (mid == n) {
+            cout << "n: " << n << ", lower: " << lower << ", upper: " << upper
+                 << ", result: " << result << ", mid: " << mid << endl;
+            return result;
+        } else if (lower + 1 == upper) {
+            cout << "n: " << n << ", lower: " << lower << ", upper: " << upper
+                 << ", result: " << result << ", mid: " << mid << endl;
+            return result + 1;
+        } else if (n < mid) {
+            cout << "n: " << n << ", lower: " << lower << ", upper: " << upper
+                 << ", result: " << result << ", mid: " << mid << endl;
+            return log_2_helper2(n, lower, upper / 2, 2 ^ [(upper + lower) / 2],
+                                 upper / 2);
+        } else {
+            cout << "n: " << n << ", lower: " << lower << ", upper: " << upper
+                 << ", result: " << result << ", mid: " << mid << endl;
+            return log_2_helper2(n, lower * 2, upper, mid * 2, lower * 2);
+        }
+    }
+    // log2 b = result  => 2^result = b
 
   public:
     int max(int a, int b) { return a > b ? a : b; }
@@ -38,16 +80,24 @@ class Calculator {
         return result;
     }
     int sqrt_int(int n) {
-        if (n == 0) {
-            return 0;
-        }
+
         if (n < 0) {
             cerr << "The square root of a negative integer can exist in a real "
                     "number"
                  << endl;
             return -1;
         }
-        return sqrt_int_helper(n, 0);
+
+        if (n < 2) {
+            return n;
+        }
+
+        int initial = 2;
+        while (initial * initial <= n) {
+            initial *= 2;
+        }
+
+        return sqrt_int_helper(n, initial / 2);
     }
     int log_2(int n) {
         if (n <= 0) {
@@ -57,7 +107,28 @@ class Calculator {
         if (n == 1) {
             return 0;
         }
-        return log_2_helper(n, 0);
+
+        const int value_2_to_16 = expt(2, 16);
+        int lower = 1;
+        int upper = 32;
+        int mid = value_2_to_16;
+
+        // 2^lower <= n < 2^lower+1
+        // int result = 0;
+        // while (lower + 1 < upper) {
+        //     if (mid == n) {
+        //         return result;
+        //     } else if (n < mid) {
+        //         upper /= 2;
+        //         result = upper;
+        //     } else {
+        //         lower *= 2;
+        //         result = lower;
+        //     }
+        // }
+        // return result + 1;
+
+        return log_2_helper2(n, 1, 32, value_2_to_16, 0);
     }
     int away_div(int nom, int denom) {
         if (denom == 0) {
@@ -81,15 +152,32 @@ class Calculator {
     }
 };
 
+int test(int actual[], int expected[], int len, string testName) {
+    cout << "Test " << testName << " begin ..." << endl;
+    for (int i = 0; i < len; i++) {
+        if (actual[i] == expected[i])
+            continue;
+        cout << i << "-th Test " << testName << " failed: " << endl;
+        cout << "Actual: " << actual[i] << endl;
+        cout << "Expected: " << expected[i] << endl;
+    }
+    cout << "Test max end" << endl;
+}
+
 int main() {
     Calculator c;
 
     cout << "******************* max ************************" << endl;
-    cout << c.max(1, 5) << endl;
-    cout << c.max(3, 2) << endl;
-    cout << c.max(0, 4) << endl;
-    cout << c.max(-1, 5) << endl;
-    cout << c.max(-1, -3) << endl;
+    // cout << c.max(1, 5) << endl;
+    // cout << c.max(3, 2) << endl;
+    // cout << c.max(0, 4) << endl;
+    // cout << c.max(-1, 5) << endl;
+    // cout << c.max(-1, -3) << endl;
+    const int maxLen = 5;
+    int maxTestActual[maxLen] = {c.max(1, 5), c.max(3, 2), c.max(0, 4),
+                                 c.max(-1, 5), c.max(-1, -3)};
+    int maxTestExpected[maxLen] = {5, 3, 4, 5, -1};
+    test(maxTestActual, maxTestExpected, maxLen, "Max");
     cout << "******************* expt ************************" << endl;
     cout << c.expt(2, 5) << endl;
     cout << c.expt(2, 0) << endl;
