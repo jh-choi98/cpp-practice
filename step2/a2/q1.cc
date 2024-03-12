@@ -1,8 +1,9 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class ASCIIArt {
-public:
+  public:
     void drawBox(int size) { // size specifies the number of rows and columns
         if (size < 3) {
             cerr << "ERROR: a size should be bigger than or equal to 3" << endl;
@@ -34,7 +35,8 @@ public:
 
     void drawTree(int height) {
         if (height < 4) {
-            cerr << "ERROR: a height should be bigger than or equal to 4" << endl;
+            cerr << "ERROR: a height should be bigger than or equal to 4"
+                 << endl;
             return;
         }
         int toMiddle = height - 2;
@@ -58,19 +60,27 @@ public:
             ++loopIndex;
         }
 
-
         for (int i = 0; i < toMiddle - 1; ++i) {
             cout << " ";
         }
         cout << "|_|" << endl;
-
     }
-    void decode() {
 
+    void decode() {
+        int number;
+        int asciiInt;
+        vector<int> numbers;
+        vector<int> asciiInts;
+
+        while (cin >> number >> asciiInt) {
+            numbers.push_back(number);
+            asciiInts.push_back(asciiInt);
+        }
+        // for ()
     }
 };
 
 int main() {
     ASCIIArt a;
-    a.drawTree(7);
+    a.decode();
 }
