@@ -1,10 +1,28 @@
 #include <cmath>
+#include <exception>
 #include <iostream>
 #include <vector>
 using namespace std;
+/*
 
+남은 문제 다 스택
++ read_int() recursion
+
+*/
 class InputPrinter {
   public:
+    int read_int() {
+        istream &in = cin;
+        in.exceptions(ios::failbit | ios::eofbit);
+        int num;
+        try {
+            in >> num;
+        } catch (const ios::failure &e) {
+            cerr << "Invalid integer value" << endl;
+        }
+        return num;
+    }
+
     void printReverse() {
         vector<int> numbers;
         int input;
